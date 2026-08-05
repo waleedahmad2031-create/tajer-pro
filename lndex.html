@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تاجر برو - تسجيل الدخول</title>
+
+<style>
+body{
+    font-family:Tahoma,Arial;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:white;
+    padding:25px;
+    width:320px;
+    border-radius:10px;
+    box-shadow:0 0 10px #ccc;
+}
+
+input,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#198754;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🔐 تسجيل الدخول</h2>
+
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+
+<input id="password" type="password" placeholder="كلمة المرور">
+
+<button id="loginBtn">دخول</button>
+
+<p id="msg"></p>
+
+</div>
+
+
+<script type="module">
+
+import { auth } from "./firebase.js";
+
+import { 
+signInWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const msg = document.getElementById("msg");
+
+
+document.getElementById("loginBtn").onclick = async()=>{
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+email.value,
+password.value
+);
+
+msg.innerHTML="تم تسجيل الدخول ✅";
+
+window.location.href="home.html";
+
+}catch(error){
+
+msg.innerHTML="خطأ في البريد أو كلمة المرور ❌";
+
+}
+
+};
+
+</script>
+
+
+</body>
+</html>

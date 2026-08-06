@@ -81,6 +81,68 @@ color:white;
 </table>
 
 </div>
+<script type="module">
 
+import { db } from "./firebase.js";
+
+import {
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const saveBtn = document.getElementById("saveBtn");
+
+
+saveBtn.onclick = async function(){
+
+const name = document.getElementById("name").value;
+const barcode = document.getElementById("barcode").value;
+const buy = document.getElementById("buy").value;
+const sell = document.getElementById("sell").value;
+const qty = document.getElementById("qty").value;
+
+
+if(!name || !sell){
+alert("اكتب اسم المنتج وسعر البيع");
+return;
+}
+
+
+try{
+
+await addDoc(collection(db,"products"),{
+
+name:name,
+barcode:barcode,
+buy:Number(buy),
+sell:Number(sell),
+qty:Number(qty),
+date:new Date()
+
+});
+
+
+alert("تم حفظ المنتج بنجاح");
+
+
+document.getElementById("name").value="";
+document.getElementById("barcode").value="";
+document.getElementById("buy").value="";
+document.getElementById("sell").value="";
+document.getElementById("qty").value="";
+
+
+}catch(error){
+
+console.log(error);
+alert("خطأ في الحفظ");
+
+}
+
+
+};
+
+</script>
 </body>
 </html>

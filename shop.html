@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,42 +12,64 @@
 
 <style>
 
+.search{
+padding:15px;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:16px;
+}
+
 .products{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
 gap:15px;
 padding:15px;
 }
 
 .product{
-background:white;
-border-radius:10px;
-padding:15px;
-box-shadow:0 0 8px #ddd;
-text-align:center;
+background:#fff;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 
 .product img{
 width:100%;
-height:150px;
+height:180px;
 object-fit:cover;
-border-radius:8px;
+}
+
+.product h3{
+padding:10px;
+font-size:18px;
 }
 
 .price{
-color:green;
-font-size:18px;
+padding:0 10px;
+color:#198754;
 font-weight:bold;
+font-size:20px;
 }
 
-.btn{
-display:block;
-background:#198754;
-color:white;
+.desc{
 padding:10px;
-margin-top:10px;
-border-radius:8px;
-text-decoration:none;
+font-size:14px;
+color:#555;
+}
+
+.buy{
+width:100%;
+padding:12px;
+border:none;
+background:#198754;
+color:#fff;
+font-size:17px;
+cursor:pointer;
 }
 
 </style>
@@ -55,39 +79,134 @@ text-decoration:none;
 <body>
 
 <div class="header">
+
 🛒 سوق مباشر
+
 </div>
 
-<div class="card">
+<div class="search">
 
-<h2>المنتجات</h2>
+<input
+id="search"
+placeholder="ابحث عن منتج">
 
-<div class="products">
+</div>
+
+<div
+id="products"
+class="products">
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+getDocs
+
+} from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+let allProducts=[];
+
+async function loadProducts(){
+
+const snap=await getDocs(collection(db,"products"));
+
+allProducts=[];
+
+snap.forEach(doc=>{
+
+allProducts.push({
+id:doc.id,
+...doc.data()
+});
+
+});
+
+showProducts(allProducts);
+
+}
+
+function showProducts(list){
+
+const box=document.getElementById("products");
+
+box.innerHTML="";
+
+if(list.length===0){
+
+box.innerHTML="<h3 style='text-align:center'>لا توجد منتجات</h3>";
+
+return;
+
+}
+
+list.forEach(p=>{
+
+box.innerHTML+=`
 
 <div class="product">
 
-<img src="https://via.placeholder.com/200">
+<img src="${p.image}" alt="${p.name}">
 
-<h3>اسم المنتج</h3>
+<h3>${p.name}</h3>
 
-<p class="price">
-0 ريال
-</p>
+<div class="price">${p.price} ريال</div>
 
-<p>
-وصف المنتج
-</p>
+<div class="desc">${p.desc}</div>
 
-<a class="btn" href="#">
-🛒 أضف للسلة
-</a>
+<button
+class="buy"
+onclick="addToCart('${p.id}','${p.name}',${p.price},'${p.image}')">
 
-</div>
+🛒 إضافة للسلة
 
+</button>
 
 </div>
 
-</div>
+`;
+
+});
+
+}
+window.addToCart=function(id,name,price,image){
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+cart.push({
+id,
+name,
+price,
+image,
+qty:1
+});
+
+localStorage.setItem("cart",JSON.stringify(cart));
+
+alert("تمت إضافة المنتج إلى السلة");
+
+};
+
+document.getElementById("search").oninput=function(){
+
+const text=this.value.toLowerCase();
+
+const result=allProducts.filter(p=>
+
+p.name.toLowerCase().includes(text)
+
+);
+
+showProducts(result);
+
+};
+
+loadProducts();
+</script>
 
 </body>
+
 </html>

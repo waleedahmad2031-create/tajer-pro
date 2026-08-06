@@ -109,10 +109,14 @@ onAuthStateChanged,
 signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-onAuthStateChanged(auth,(user)=>{
-    if(!user){
-        window.location.href="index.html";
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+        console.log("تم تسجيل الدخول:", user.email);
+    } else {
+        window.location.replace("index.html");
     }
+
 });
 
 document.getElementById("logoutBtn").onclick = async ()=>{

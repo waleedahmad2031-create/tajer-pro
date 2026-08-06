@@ -86,12 +86,14 @@ password.value
 msg.innerHTML="تم تسجيل الدخول ✅";
 
 window.location.href="home.html";
+catch(error){
 
-}catch(error){
+console.log(error);
 
-msg.innerHTML="خطأ في البريد أو كلمة المرور ❌";
+msg.innerHTML = error.code;
 
 }
+
 
 };
 

@@ -13,6 +13,8 @@ async function load(){
 
 let snap = await getDocs(collection(db,"products"));
 
+console.log("عدد المنتجات:", snap.size);
+
 
 box.innerHTML="";
 

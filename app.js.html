@@ -1,0 +1,292 @@
+import { db } from "./firebase.js";
+
+import {
+collection,
+getDocs,
+addDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+let products = [];
+
+
+
+const productsBox =
+document.getElementById("products");
+
+
+
+async function loadProducts(){
+
+
+if(!productsBox) return;
+
+
+const snap =
+await getDocs(collection(db,"products"));
+
+
+products=[];
+
+
+snap.forEach((doc)=>{
+
+products.push({
+
+id:doc.id,
+...doc.data()
+
+});
+
+});
+
+
+showProducts(products);
+
+
+}
+
+
+
+
+function showProducts(list){
+
+
+productsBox.innerHTML="";
+
+
+list.forEach((p)=>{
+
+
+productsBox.innerHTML += `
+
+<div class="product">
+
+
+<img src="${p.image || ''}">
+
+
+<h3>${p.name}</h3>
+
+
+<p>
+${p.price} ريال
+</p>
+
+
+<button onclick="addToCart('${p.id}')">
+أضف للسلة
+</button>
+
+
+</div>
+
+`;
+
+
+});
+
+
+}
+
+
+
+loadProducts();
+
+window.addToCart = function(id){
+
+
+let product =
+products.find(p => p.id === id);
+
+
+
+if(!product){
+
+alert("المنتج غير موجود");
+
+return;
+
+}
+
+
+
+let cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+
+
+let old =
+cart.find(item => item.id === id);
+
+
+
+if(old){
+
+
+old.qty = Number(old.qty || 1) + 1;
+
+
+}else{
+
+
+cart.push({
+
+id:product.id,
+
+name:product.name,
+
+price:product.price,
+
+image:product.image,
+
+qty:1
+
+});
+
+
+}
+
+
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+
+
+alert("تمت إضافة المنتج إلى السلة 🛒");
+
+
+}
+
+
+
+
+// البحث
+
+window.searchProducts = function(value){
+
+
+let result =
+products.filter(p =>
+
+p.name.includes(value)
+
+);
+
+
+showProducts(result);
+
+
+}
+
+
+
+// التصنيف
+
+window.filterCategory = function(cat){
+
+
+if(cat==="all"){
+
+showProducts(products);
+
+return;
+
+}
+
+
+let result =
+products.filter(p =>
+
+p.category === cat
+
+);
+
+
+showProducts(result);
+
+
+}
+
+
+// ترتيب المنتجات
+
+window.sortProducts = function(type){
+
+
+let list = [...products];
+
+
+
+if(type === "cheap"){
+
+
+list.sort((a,b)=>
+Number(a.price) - Number(b.price)
+);
+
+
+}
+
+
+
+if(type === "expensive"){
+
+
+list.sort((a,b)=>
+Number(b.price) - Number(a.price)
+);
+
+
+}
+
+
+
+showProducts(list);
+
+
+}
+
+
+
+
+// إنشاء طلب وحفظه محلياً
+
+window.saveOrder = async function(order){
+
+
+try{
+
+
+await addDoc(
+collection(db,"orders"),
+{
+
+...order,
+
+createdAt:
+serverTimestamp()
+
+}
+
+);
+
+
+console.log("تم حفظ الطلب");
+
+
+}catch(error){
+
+
+console.log(error);
+
+
+}
+
+
+}

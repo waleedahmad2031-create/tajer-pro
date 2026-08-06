@@ -1,42 +1,50 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-getDocs
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const box = document.getElementById("products");
 
-let box = document.getElementById("products");
+async function loadProducts() {
 
+  try {
 
-async function load(){
+    const snap = await getDocs(collection(db, "products"));
 
-let snap = await getDocs(collection(db,"products"));
+    box.innerHTML = "";
 
-console.log("عدد المنتجات:", snap.size);
+    if (snap.empty) {
+      box.innerHTML = "<h3>لا توجد منتجات</h3>";
+      return;
+    }
 
+    snap.forEach((doc) => {
 
-box.innerHTML="";
+      const p = doc.data();
 
+      const name = p.name || p["اسم"] || "";
+      const price = p.price || p["سعر"] || "";
+      const image = p.image || p["صورة"] || "";
 
-snap.forEach(doc=>{
+      box.innerHTML += `
+        <div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
+          <img src="${image}" width="150" style="max-width:100%;border-radius:8px"><br><br>
+          <h3>${name}</h3>
+          <p>${price} ريال</p>
+        </div>
+      `;
 
-let p = doc.data();
+    });
 
+  } catch (error) {
 
-box.innerHTML += `
+    console.error(error);
+    box.innerHTML = "<h3>حدث خطأ في تحميل المنتجات</h3>";
 
-<div>
-<h3>${p.name}</h3>
-<p>${p.price} ريال</p>
-</div>
-
-`;
-
-});
-
+  }
 
 }
 
-
-load();
+loadProducts();

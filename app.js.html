@@ -11,32 +11,41 @@ async function loadProducts() {
 
   try {
 
-    const snap = await getDocs(collection(db, "products"));
-
     box.innerHTML = "";
 
-    if (snap.empty) {
-      box.innerHTML = "<h3>لا توجد منتجات</h3>";
-      return;
+    const collections = ["products", "منتجات"];
+
+    let found = false;
+
+    for (const col of collections) {
+
+      const snap = await getDocs(collection(db, col));
+
+      snap.forEach((doc) => {
+
+        found = true;
+
+        const p = doc.data();
+
+        const name = p.name || p["اسم"] || "";
+        const price = p.price || p["سعر"] || "";
+        const image = p.image || p["صورة"] || "";
+
+        box.innerHTML += `
+          <div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
+            <img src="${image}" width="150" style="max-width:100%;border-radius:8px"><br><br>
+            <h3>${name}</h3>
+            <p>${price} ريال</p>
+          </div>
+        `;
+
+      });
+
     }
 
-    snap.forEach((doc) => {
-
-      const p = doc.data();
-
-      const name = p.name || p["اسم"] || "";
-      const price = p.price || p["سعر"] || "";
-      const image = p.image || p["صورة"] || "";
-
-      box.innerHTML += `
-        <div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
-          <img src="${image}" width="150" style="max-width:100%;border-radius:8px"><br><br>
-          <h3>${name}</h3>
-          <p>${price} ريال</p>
-        </div>
-      `;
-
-    });
+    if (!found) {
+      box.innerHTML = "<h3>لا توجد منتجات</h3>";
+    }
 
   } catch (error) {
 

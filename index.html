@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>تاجر برو - تسجيل الدخول</title>
+<title>تاجر برو</title>
 
 <style>
 body{
@@ -23,33 +23,29 @@ body{
     width:320px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,.15);
-}
-
-h2{
     text-align:center;
 }
 
-input,button{
+h2{
+    margin-bottom:20px;
+}
+
+button,a{
     width:100%;
     padding:12px;
     margin-top:10px;
     border-radius:6px;
-    border:1px solid #ccc;
+    border:none;
+    background:#198754;
+    color:#fff;
+    font-size:16px;
+    text-decoration:none;
+    display:block;
     box-sizing:border-box;
 }
 
 button{
-    background:#198754;
-    color:#fff;
-    border:none;
     cursor:pointer;
-    font-size:16px;
-}
-
-#msg{
-    margin-top:15px;
-    text-align:center;
-    color:red;
 }
 </style>
 
@@ -59,55 +55,20 @@ button{
 
 <div class="box">
 
-<h2>🔐 تسجيل الدخول</h2>
+<h2>🛒 تاجر برو</h2>
 
-<input id="email" type="email" placeholder="البريد الإلكتروني">
+<p>مرحبا بك في المتجر</p>
 
-<input id="password" type="password" placeholder="كلمة المرور">
-
-<button id="loginBtn">دخول</button>
-
-<p id="msg"></p>
+<a href="home.html">
+دخول الموقع
+</a>
 
 </div>
 
-<script type="module">
-
-import { auth } from "./firebase.js";
-
-import {
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const msg = document.getElementById("msg");
-const btn = document.getElementById("loginBtn");
-
-btn.onclick = async function () {
-
-  msg.innerHTML = "";
-
-  try {
-
-    await signInWithEmailAndPassword(
-      auth,
-      email.value.trim(),
-      password.value
-    );
-alert("تم تسجيل الدخول");
-    window.location.href = "home.html";
-
-  } catch (error) {
-
-    console.log(error);
-    msg.innerHTML = error.code + "<br>" + error.message;
-
-  }
-
-};
-
+<script>
+/* بدون تسجيل دخول */
 </script>
 
 </body>
 </html>
+

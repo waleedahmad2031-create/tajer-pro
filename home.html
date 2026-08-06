@@ -4,57 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>تاجر برو</title>
+<title>سوق مباشر</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    background:#f5f5f5;
+font-family:Tahoma,Arial;
+background:#f5f5f5;
+margin:0;
 }
 
 header{
-    background:#198754;
-    color:#fff;
-    padding:15px;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
+background:#008000;
+color:white;
+padding:20px;
+text-align:center;
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-    padding:20px;
+.container{
+padding:20px;
 }
 
-.item{
-    background:#fff;
-    text-decoration:none;
-    color:#333;
-    padding:25px;
-    border-radius:10px;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.15);
-    font-size:18px;
+.card{
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
 }
 
-.item span{
-    display:block;
-    font-size:40px;
-    margin-bottom:10px;
-}
-
-.logout{
-    display:block;
-    margin:20px;
-    padding:12px;
-    text-align:center;
-    background:#dc3545;
-    color:#fff;
-    text-decoration:none;
-    border-radius:8px;
+a{
+display:block;
+background:#25D366;
+color:white;
+padding:12px;
+text-align:center;
+text-decoration:none;
+border-radius:8px;
 }
 </style>
 
@@ -63,67 +47,28 @@ header{
 <body>
 
 <header>
-تاجر برو
+<h1>سوق مباشر</h1>
+<p>تسوق بسهولة من مكانك</p>
 </header>
 
-<div class="grid">
+<div class="container">
 
-<a href="products.html" class="item">
-<span>📦</span>
-المنتجات
+<div class="card">
+<h3>مرحبا بك</h3>
+<p>اختر المنتجات والخدمات المتوفرة لدينا.</p>
+</div>
+
+<a href="shop.html">
+دخول السوق
 </a>
 
-<a href="sales.html" class="item">
-<span>🛒</span>
-المبيعات
-</a>
+<br>
 
-<a href="expenses.html" class="item">
-<span>💸</span>
-المصروفات
-</a>
-
-<a href="reports.html" class="item">
-<span>📊</span>
-التقارير
-</a>
-
-<a href="partners.html" class="item">
-<span>👥</span>
-الشركاء
-</a>
-
-<a href="settings.html" class="item">
-<span>⚙️</span>
-الإعدادات
+<a href="admin.html">
+الإدارة
 </a>
 
 </div>
-
-<a href="#" id="logoutBtn" class="logout">تسجيل الخروج</a>
-
-<script type="module">
-import { auth } from "./firebase.js";
-import {
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-onAuthStateChanged(auth, (user) => {
-
-    if (user) {
-        console.log("تم تسجيل الدخول:", user.email);
-    } else {
-        window.location.replace("index.html");
-    }
-
-});
-
-document.getElementById("logoutBtn").onclick = async ()=>{
-    await signOut(auth);
-    window.location.href="index.html";
-};
-</script>
 
 </body>
 </html>

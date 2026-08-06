@@ -73,27 +73,25 @@ const password = document.getElementById("password");
 const msg = document.getElementById("msg");
 
 
-document.getElementById("loginBtn").onclick = async()=>{
+document.getElementById("loginBtn").onclick = async () => {
 
-try{
+  try {
 
-await signInWithEmailAndPassword(
-auth,
-email.value,
-password.value
-);
+    await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
 
-msg.innerHTML="تم تسجيل الدخول ✅";
+    msg.innerHTML = "تم تسجيل الدخول ✅";
+    window.location.href = "home.html";
 
-window.location.href="home.html";
-catch(error){
+  } catch (error) {
 
-console.log(error);
+    console.log(error);
+    msg.innerHTML = error.code;
 
-msg.innerHTML = error.code;
-
-}
-
+  }
 
 };
 

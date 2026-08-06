@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>تاجر برو</title>
+<title>تاجر برو - تسجيل الدخول</title>
 
 <style>
 body{
@@ -45,27 +45,68 @@ button{
     cursor:pointer;
     font-size:16px;
 }
+
+#msg{
+    margin-top:15px;
+    text-align:center;
+    color:red;
+}
 </style>
 
 </head>
+
 <body>
 
 <div class="box">
 
 <h2>🔐 تسجيل الدخول</h2>
 
-<input type="email" placeholder="البريد الإلكتروني">
+<input id="email" type="email" placeholder="البريد الإلكتروني">
 
-<input type="password" placeholder="كلمة المرور">
+<input id="password" type="password" placeholder="كلمة المرور">
 
 <button id="loginBtn">دخول</button>
 
+<p id="msg"></p>
+
 </div>
 
-<script>
-document.getElementById("loginBtn").onclick = function () {
+<script type="module">
+
+import { auth } from "./firebase.js";
+
+import {
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const msg = document.getElementById("msg");
+const btn = document.getElementById("loginBtn");
+
+btn.onclick = async function () {
+
+  msg.innerHTML = "";
+
+  try {
+
+    await signInWithEmailAndPassword(
+      auth,
+      email.value.trim(),
+      password.value
+    );
+
     window.location.href = "home.html";
+
+  } catch (error) {
+
+    console.log(error);
+    msg.innerHTML = error.code + "<br>" + error.message;
+
+  }
+
 };
+
 </script>
 
 </body>
